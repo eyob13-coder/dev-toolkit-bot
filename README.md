@@ -21,7 +21,7 @@ A personal Telegram bot for developers that helps you:
 |--------|-------------|
 | `/save <name>` | Save a code snippet |
 | `/get <name>` | Retrieve your saved snippet |
-| `/format js|html|css` | Format code using `js-beautify` |
+| `/format <language>` | Format code using `js-beautify` |
 | `/helpme` | Paste an error and get help from Gemini AI |
 | `/start` | Intro and instructions |
 
