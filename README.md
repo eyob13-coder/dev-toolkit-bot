@@ -19,11 +19,12 @@ A personal Telegram bot for developers that helps you:
 
 | Command | Description |
 |--------|-------------|
+| `/start` | Intro and instructions |
 | `/save <name>` | Save a code snippet |
 | `/get <name>` | Retrieve your saved snippet |
 | `/format <language>` | Format code using `js-beautify` |
 | `/helpme` | Paste an error and get help from Gemini AI |
-| `/start` | Intro and instructions |
+| `/delete` | delete saved snippets |
 
 ---
 
