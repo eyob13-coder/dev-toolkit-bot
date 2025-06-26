@@ -103,7 +103,7 @@ bot.onText(/\/format (.+)/i, (msg, match) => {
 // ─────── /helpme ───────
 bot.onText(/\/helpme/i, (msg) => {
   awaitingSnippets[msg.from.id] = { action: "error" };
-  bot.sendMessage(msg.chat.id, `I got this error:\n\n${msg.text}\n\nExplain it clearly and suggest how to fix it.`);
+  bot.sendMessage(msg.chat.id, `💥 Send your error message or stack trace, and I'll try to help using Gemini.`);
 });
 
 // ─────── /list ───────
