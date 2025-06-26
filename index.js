@@ -25,7 +25,7 @@ function escapeMarkdown(text) {
 bot.onText(/\/start/i, (msg) => {
   bot.sendMessage(
     msg.chat.id,
-    `👋 Welcome to *Dev Toolbox Bot* 🛠️
+    `👋 Welcome to *Dev Toolkit Bot* 🛠️
 
 Here's what I can do:
 💾 /save <name> – Save a code snippet  
@@ -42,7 +42,7 @@ Here's what I can do:
 bot.onText(/\/commands/i, (msg) => {
   bot.sendMessage(
     msg.chat.id,
-    `📚 *Dev Toolbox Commands*:
+    `📚 *Dev Toolkit Commands*:
 
 💾 /save <name> – Save your code snippet  
 📂 /get <name> – Retrieve a saved snippet  
