@@ -1,4 +1,4 @@
-# 🛠️ Dev Toolbox Bot
+# 🛠️ Dev Toolkit Bot
 
 A personal Telegram bot for developers that helps you:
 
@@ -11,7 +11,7 @@ A personal Telegram bot for developers that helps you:
 
 ## 🔗 Try the Bot
 
-👉 [t.me/dev_toolbox_bot](https://t.me/@dev_toolkit_bot)
+👉 [t.me/dev_toolkit_bot](https://t.me/@dev_toolkit_bot)
 
 ---
 
