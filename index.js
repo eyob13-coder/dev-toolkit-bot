@@ -9,14 +9,18 @@ const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const awaitingSnippets = {};
 
 // ─────── Helper Functions ───────
-// Replace splitMessage with a version that handles code blocks safely
+// Replace splitMessageWithCodeBlock with improved version
 function splitMessageWithCodeBlock(text, maxLength = 3000, lang = "") {
+  // Replace all triple backticks with three single quotes to avoid breaking Markdown
+  const safeText = text.replace(/```/g, "'''");
+  // Telegram's hard limit is 4096, so enforce that
+  const safeMaxLength = Math.min(maxLength, 4000); // leave room for formatting
   const codeBlockStart = `\u0060\u0060\u0060${lang}\n`;
   const codeBlockEnd = `\n\u0060\u0060\u0060`;
-  const maxContentLength = maxLength - codeBlockStart.length - codeBlockEnd.length;
+  const maxContentLength = safeMaxLength - codeBlockStart.length - codeBlockEnd.length;
   const parts = [];
-  for (let i = 0; i < text.length; i += maxContentLength) {
-    parts.push(codeBlockStart + text.slice(i, i + maxContentLength) + codeBlockEnd);
+  for (let i = 0; i < safeText.length; i += maxContentLength) {
+    parts.push(codeBlockStart + safeText.slice(i, i + maxContentLength) + codeBlockEnd);
   }
   return parts;
 }
