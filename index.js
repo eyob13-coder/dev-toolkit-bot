@@ -9,7 +9,7 @@ const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const awaitingSnippets = {};
 
 // ─────── Helper Functions ───────
-function splitMessage(text, maxLength = 4000) {
+function splitMessage(text, maxLength = 3000) {
   const parts = [];
   for (let i = 0; i < text.length; i += maxLength) {
     parts.push(text.slice(i, i + maxLength));
@@ -17,9 +17,9 @@ function splitMessage(text, maxLength = 4000) {
   return parts;
 }
 
-function escapeMarkdown(text) {
-  return text.replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&');
-}
+// function escapeMarkdown(text) {
+//   return text.replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&');
+// }
 
 // ─────── Welcome ───────
 bot.onText(/\/start/i, (msg) => {
@@ -83,8 +83,8 @@ bot.onText(/\/get (.+)/i, async (msg, match) => {
   const chatId = msg.chat.id;
 
   if (code) {
-    const safeCode = escapeMarkdown(code);
-    const parts = splitMessage(`📂 *${name}*:\n\`\`\`\n${safeCode}\n\`\`\``);
+    
+    const parts = splitMessage(`📂 *${name}*:\n\`\`\`\n${code}\n\`\`\``);
     for (const part of parts) {
       await bot.sendMessage(chatId, part, { parse_mode: "Markdown" });
     }
@@ -152,8 +152,8 @@ bot.on("message", async (msg) => {
           model: "gemini-2.5-flash",
           contents: `Please format the following ${userState.lang} code properly:\n\n${msg.text}`,
         });
-        const response = escapeMarkdown(result.text.trim());
-        const parts = splitMessage(`🎨 *Formatted ${userState.lang} code:*\n\n${response}`);
+        
+        const parts = splitMessage(`🎨 *Formatted ${userState.lang} code:*\n\`\`\`${userState.lang}\n${result.text.trim()}\n\`\`\``);
         for (const part of parts) {
           await bot.sendMessage(chatId, part, { parse_mode: "Markdown" });
         }
@@ -165,8 +165,8 @@ bot.on("message", async (msg) => {
           model: "gemini-2.5-flash",
           contents: `I got this error:\n\n${msg.text}\n\nExplain it clearly and suggest how to fix it.`,
         });
-        const response = escapeMarkdown(result.text.trim());
-        const parts = splitMessage(`🤖 *Gemini AI says:*\n\n${response}`);
+        
+        const parts = splitMessage(`🤖 *Gemini AI says:*\n\`\`\`\n${result.text.trim()}\n\`\`\``);;
         for (const part of parts) {
           await bot.sendMessage(chatId, part, { parse_mode: "Markdown" });
         }
