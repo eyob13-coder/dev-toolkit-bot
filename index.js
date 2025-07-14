@@ -9,10 +9,14 @@ const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const awaitingSnippets = {};
 
 // ─────── Helper Functions ───────
-function splitMessage(text, maxLength = 3000) {
+// Replace splitMessage with a version that handles code blocks safely
+function splitMessageWithCodeBlock(text, maxLength = 3000, lang = "") {
+  const codeBlockStart = `\u0060\u0060\u0060${lang}\n`;
+  const codeBlockEnd = `\n\u0060\u0060\u0060`;
+  const maxContentLength = maxLength - codeBlockStart.length - codeBlockEnd.length;
   const parts = [];
-  for (let i = 0; i < text.length; i += maxLength) {
-    parts.push(text.slice(i, i + maxLength));
+  for (let i = 0; i < text.length; i += maxContentLength) {
+    parts.push(codeBlockStart + text.slice(i, i + maxContentLength) + codeBlockEnd);
   }
   return parts;
 }
@@ -83,10 +87,9 @@ bot.onText(/\/get (.+)/i, async (msg, match) => {
   const chatId = msg.chat.id;
 
   if (code) {
-    
-    const parts = splitMessage(`📂 *${name}*:\n\`\`\`\n${code}\n\`\`\``);
+    const parts = splitMessageWithCodeBlock(code, 3000);
     for (const part of parts) {
-      await bot.sendMessage(chatId, part, { parse_mode: "Markdown" });
+      await bot.sendMessage(chatId, `📂 *${name}*:\n${part}`, { parse_mode: "Markdown" });
     }
   } else {
     bot.sendMessage(chatId, `❌ No snippet found named *${name}*`, { parse_mode: "Markdown" });
@@ -152,10 +155,9 @@ bot.on("message", async (msg) => {
           model: "gemini-2.5-flash",
           contents: `Please format the following ${userState.lang} code properly:\n\n${msg.text}`,
         });
-        
-        const parts = splitMessage(`🎨 *Formatted ${userState.lang} code:*\n\`\`\`${userState.lang}\n${result.text.trim()}\n\`\`\``);
+        const parts = splitMessageWithCodeBlock(result.text.trim(), 3000, userState.lang);
         for (const part of parts) {
-          await bot.sendMessage(chatId, part, { parse_mode: "Markdown" });
+          await bot.sendMessage(chatId, `🎨 *Formatted ${userState.lang} code:*\n${part}`, { parse_mode: "Markdown" });
         }
         break;
       }
@@ -165,10 +167,9 @@ bot.on("message", async (msg) => {
           model: "gemini-2.5-flash",
           contents: `I got this error:\n\n${msg.text}\n\nExplain it clearly and suggest how to fix it.`,
         });
-        
-        const parts = splitMessage(`🤖 *Gemini AI says:*\n\`\`\`\n${result.text.trim()}\n\`\`\``);;
+        const parts = splitMessageWithCodeBlock(result.text.trim(), 3000);
         for (const part of parts) {
-          await bot.sendMessage(chatId, part, { parse_mode: "Markdown" });
+          await bot.sendMessage(chatId, `🤖 *Gemini AI says:*\n${part}`, { parse_mode: "Markdown" });
         }
         break;
       }
